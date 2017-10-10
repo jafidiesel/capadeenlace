@@ -1,13 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
- * capaFisica.java
- *
- * Created on 09-oct-2012, 10:09:00
- */
 
 package capadeenlace;
 import java.io.*;
@@ -16,26 +6,24 @@ import java.util.logging.Logger;
 import javax.comm.*;
 import java.util.*;
 import javax.swing.JTextField;
-/**
- *
- * @author Nazrala
- */
+
+
 public class capaFisica extends javax.swing.JFrame implements Runnable,SerialPortEventListener{
 
-Integer velocidad;
-Integer bitParada;
-String nombrePuerto;
-Integer paridad;
-Integer longTrama;
-public SerialPort puerto;
-Enumeration listaPuertos;
-public CommPortIdentifier idPuerto;
-int estado;
-capaEnlace capaenlace = new capaEnlace();
-Thread hilo;
-OutputStream salida;
-InputStream entrada;
-static String tramaparamostrar;
+    Integer velocidad;
+    Integer bitParada;
+    String nombrePuerto;
+    Integer paridad;
+    Integer longTrama;
+    public SerialPort puerto;
+    Enumeration listaPuertos;
+    public CommPortIdentifier idPuerto;
+    int estado;
+    capaEnlace capaenlace = new capaEnlace();
+    Thread hilo;
+    OutputStream salida;
+    InputStream entrada;
+    static String tramaparamostrar;
    
 
 
