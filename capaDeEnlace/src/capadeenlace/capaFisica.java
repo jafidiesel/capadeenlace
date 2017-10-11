@@ -3,7 +3,7 @@ package capadeenlace;
 import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.comm.*;
+import gnu.io.*;
 import java.util.*;
 import javax.swing.JTextField;
 
@@ -31,8 +31,9 @@ public class capaFisica extends javax.swing.JFrame implements Runnable,SerialPor
      private void iniciarElementos(){
       
         String port;
+        System.out.println(CommPortIdentifier.PORT_SERIAL);
         listaPuertos = CommPortIdentifier.getPortIdentifiers();
-
+        System.out.println(listaPuertos.toString());
         while (listaPuertos.hasMoreElements()) {
             idPuerto = (CommPortIdentifier) listaPuertos.nextElement(); //get next port to check
             if (idPuerto.getPortType() == CommPortIdentifier.PORT_SERIAL) {
