@@ -6,7 +6,7 @@
 
 package capadeenlace;
 import java.io.*;
-import javax.comm.*;
+import gnu.io.*;
 import java.util.zip.CRC32;
 /**
  *

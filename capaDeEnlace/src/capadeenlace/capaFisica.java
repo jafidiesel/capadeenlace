@@ -3,7 +3,7 @@ package capadeenlace;
 import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.comm.*;
+import gnu.io.*;
 import java.util.*;
 import javax.swing.JTextField;
 
@@ -31,8 +31,9 @@ public class capaFisica extends javax.swing.JFrame implements Runnable,SerialPor
      private void iniciarElementos(){
       
         String port;
+        System.out.println(CommPortIdentifier.PORT_SERIAL);
         listaPuertos = CommPortIdentifier.getPortIdentifiers();
-
+        System.out.println(listaPuertos.toString());
         while (listaPuertos.hasMoreElements()) {
             idPuerto = (CommPortIdentifier) listaPuertos.nextElement(); //get next port to check
             if (idPuerto.getPortType() == CommPortIdentifier.PORT_SERIAL) {
@@ -191,10 +192,6 @@ public class capaFisica extends javax.swing.JFrame implements Runnable,SerialPor
             .addGroup(configuracionLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(configuracionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(configuracionLayout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tiempoAcuse, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(configuracionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, configuracionLayout.createSequentialGroup()
                             .addComponent(jLabel1)
@@ -217,7 +214,11 @@ public class capaFisica extends javax.swing.JFrame implements Runnable,SerialPor
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jLabel6)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(comboParada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(comboParada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(configuracionLayout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tiempoAcuse, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(51, Short.MAX_VALUE))
         );
         configuracionLayout.setVerticalGroup(
@@ -238,11 +239,11 @@ public class capaFisica extends javax.swing.JFrame implements Runnable,SerialPor
                     .addComponent(jLabel6)
                     .addComponent(comboParada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(comboLong, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(26, 26, 26)
                 .addGroup(configuracionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(tiempoAcuse, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(256, 256, 256))
+                .addContainerGap())
         );
 
         jTabbedPane2.addTab("Configuración", configuracion);
@@ -256,7 +257,7 @@ public class capaFisica extends javax.swing.JFrame implements Runnable,SerialPor
         textoRecibir.setHorizontalAlignment(javax.swing.JTextField.LEFT);
         textoRecibir.setAlignmentX(0.0F);
         textoRecibir.setAlignmentY(0.0F);
-        textoRecibir.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        textoRecibir.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         textoRecibir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 textoRecibirActionPerformed(evt);
@@ -347,7 +348,13 @@ public class capaFisica extends javax.swing.JFrame implements Runnable,SerialPor
           
           velocidad=Integer.parseInt(comboVelocidad.getSelectedItem().toString());
           bitParada=Integer.parseInt(comboParada.getSelectedItem().toString());
-          if(comboParidad.getSelectedItem().toString().equals("Par")){paridad=2;}else{paridad=1;}
+          
+          if(comboParidad.getSelectedItem().toString().equals("Par"))
+            {paridad=2;
+            }else
+            {
+              paridad=1;}
+          
           longTrama=Integer.parseInt(comboLong.getSelectedItem().toString());
           puerto = (SerialPort) idPuerto.open("Capa de Enlace", 2000);
           puerto.setSerialPortParams(velocidad, longTrama, bitParada, paridad);
