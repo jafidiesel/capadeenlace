@@ -34,7 +34,7 @@ public void setSerialPort(SerialPort puerto){
 elPuerto = puerto;
 }
 public void EnviarTrama(Trama trama){
-
+    
     if(llego_trama_conf == true){
         if(trama.getTipo()=='0'){ // ya que es la unica trama que necesita de ack para volver a mandar es la de datos
             llego_trama_conf = false;
@@ -87,8 +87,7 @@ public void recibir(capaFisica ca,Trama laTrama){
             System.out.println("ultimoorden");
             mandarAck();
        
-        }
-        else{
+        }else{
             
         long crcRecibido = calcularCRC(String.valueOf(laTrama.getDatos())); // calculo nuevamente el CRC de los datos recibidos
         System.out.println(crcRecibido);
@@ -101,6 +100,7 @@ public void recibir(capaFisica ca,Trama laTrama){
         }else{ // esta todo ok entonces muestro y mando ack
            mandarAck(); // Mando el ask de confirmacion
            ca.setTextoRecibir(filtroDatos(String.valueOf(laTrama.getDatos()))); // mando los datos sin los asteriscos de relleno
+           ca.setDetalleDeComunicacion("mensaje");
         }
        }
     }

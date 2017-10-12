@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import gnu.io.*;
 import java.util.*;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 
@@ -105,6 +106,16 @@ public class capaFisica extends javax.swing.JFrame implements Runnable,SerialPor
         this.textoRecibir.setText(textoRecibir);
     }
 
+    public void setDetalleDeComunicacion(String texto) {
+        String textoPreparado;
+        textoPreparado = getDetalleDeComunicacion() + '\n';
+        this.detalleDeComunicacion.setText(textoPreparado + texto);
+    }
+    
+    public String getDetalleDeComunicacion() {
+        return detalleDeComunicacion.getText();
+    }
+    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -134,6 +145,9 @@ public class capaFisica extends javax.swing.JFrame implements Runnable,SerialPor
         textoRecibir = new javax.swing.JTextField();
         enviar = new javax.swing.JButton();
         detalle = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        detalleCom = new javax.swing.JScrollPane();
+        detalleDeComunicacion = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -282,7 +296,7 @@ public class capaFisica extends javax.swing.JFrame implements Runnable,SerialPor
                         .addComponent(textoRecibir, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
                         .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mensajeLayout.createSequentialGroup()
-                        .addComponent(textoEnviar, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
+                        .addComponent(textoEnviar, javax.swing.GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(enviar)
                         .addGap(12, 12, 12))))
@@ -301,15 +315,33 @@ public class capaFisica extends javax.swing.JFrame implements Runnable,SerialPor
 
         jTabbedPane2.addTab("Mensaje", mensaje);
 
+        jLabel7.setText("Detalle de la comunicación");
+
+        detalleDeComunicacion.setColumns(20);
+        detalleDeComunicacion.setRows(5);
+        detalleCom.setViewportView(detalleDeComunicacion);
+
         javax.swing.GroupLayout detalleLayout = new javax.swing.GroupLayout(detalle);
         detalle.setLayout(detalleLayout);
         detalleLayout.setHorizontalGroup(
             detalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 396, Short.MAX_VALUE)
+            .addGroup(detalleLayout.createSequentialGroup()
+                .addGap(179, 179, 179)
+                .addComponent(jLabel7)
+                .addContainerGap(124, Short.MAX_VALUE))
+            .addGroup(detalleLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(detalleCom)
+                .addContainerGap())
         );
         detalleLayout.setVerticalGroup(
             detalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 354, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, detalleLayout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(detalleCom, javax.swing.GroupLayout.DEFAULT_SIZE, 310, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jTabbedPane2.addTab("Detalle", detalle);
@@ -417,7 +449,7 @@ capaenlace.EnviarTrama(capaenlace.armarTrama('0', textoEnviar.getText()));
         // TODO add your handling code here:
     }//GEN-LAST:event_textoRecibirActionPerformed
   public SerialPort getPuerto(){
-return puerto;
+    return puerto;
 }
     /**
     * @param args the command line arguments
@@ -439,6 +471,8 @@ return puerto;
     private javax.swing.JComboBox comboVelocidad;
     private javax.swing.JPanel configuracion;
     private javax.swing.JPanel detalle;
+    private javax.swing.JScrollPane detalleCom;
+    private javax.swing.JTextArea detalleDeComunicacion;
     private javax.swing.JButton enviar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -446,6 +480,7 @@ return puerto;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JPanel mensaje;
     private javax.swing.JTextField textoEnviar;
@@ -453,6 +488,7 @@ return puerto;
     private javax.swing.JTextField tiempoAcuse;
     // End of variables declaration//GEN-END:variables
 
+    
     public void run() {
       try {
             Thread.sleep(2000);
