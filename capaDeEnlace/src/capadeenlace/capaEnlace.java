@@ -33,26 +33,29 @@ public class capaEnlace{
 public void setSerialPort(SerialPort puerto){
 elPuerto = puerto;
 }
-public void EnviarTrama(Trama trama){
+public boolean EnviarTrama(Trama trama){
     
     if(llego_trama_conf == true){
+        
         if(trama.getTipo()=='0'){ // ya que es la unica trama que necesita de ack para volver a mandar es la de datos
             llego_trama_conf = false;
         }
-        char[]arreglo=trama.getTotal().toCharArray();
+        char[]arreglo=trama.getTramaArmada().toCharArray();
         tramaGuardada=trama;
         try {
             salida = elPuerto.getOutputStream();
             for (int i = 0; i < arreglo.length; i++)  {
                 salida.write((int)arreglo[i]);
-                
 
             }
-
+            
         } catch (Exception ex) {
             System.out.println("Error al enviar: "+ex.getMessage());
+            return false;
         }
-}
+        return true;
+    }
+    return false;
 }
 
 public Trama ReconstruirTrama(String cadenaRecibida){
@@ -87,35 +90,31 @@ public void recibir(capaFisica ca,Trama laTrama){
             System.out.println("ultimoorden");
             mandarAck();
        
-        }else{
-            
-        long crcRecibido = calcularCRC(String.valueOf(laTrama.getDatos())); // calculo nuevamente el CRC de los datos recibidos
-        System.out.println(crcRecibido);
-         System.out.println(laTrama.getCrc());
+        }else{    
+            long crcRecibido = calcularCRC(String.valueOf(laTrama.getDatos())); // calculo nuevamente el CRC de los datos recibidos
+            System.out.println(crcRecibido);
+            System.out.println(laTrama.getCrc());
         
-        if(crcRecibido != laTrama.getCrc()){ // en caso de recibir la trama con errores, crc diferentes
-            System.out.println("Error en crc");
-            mandarNak();
-          
-        }else{ // esta todo ok entonces muestro y mando ack
-           mandarAck(); // Mando el ask de confirmacion
-           ca.setTextoRecibir(filtroDatos(String.valueOf(laTrama.getDatos()))); // mando los datos sin los asteriscos de relleno
-           ca.setDetalleDeComunicacion("mensaje");
+            if(crcRecibido != laTrama.getCrc()){ // en caso de recibir la trama con errores, crc diferentes
+                System.out.println("Error en crc");
+                mandarNak();
+            }else{ // esta todo ok entonces muestro y mando ack
+               mandarAck(); // Mando el ask de confirmacion
+               ca.setTextoRecibir(filtroDatos(String.valueOf(laTrama.getDatos()))); // mando los datos sin los asteriscos de relleno
+               ca.setDetalleDeEnvio("mensaje");
+            }
         }
-       }
-    }
- else if(laTrama.getTipo()=='1'){ // trama tipo ACK
-     ca.setTextoRecibir(filtroDatos(String.valueOf(laTrama.getDatos()))); // muestro la confirmacion de ask
-      llego_trama_conf = true;
- }
- else {
-        System.out.println("por aca pasa");// la trama se envio con errores por lo que se vuelve a enviar tipo NAK
- ca.setTextoRecibir(filtroDatos(String.valueOf(laTrama.getDatos()))); // muestro la confirmacion de que llego con error la trama
-        System.out.println("envio de nuevo");
-        System.out.println(tramaGuardada.getTipo());
+    } else if(laTrama.getTipo()=='1'){ // trama tipo ACK
+        ca.setTextoRecibir(filtroDatos(String.valueOf(laTrama.getDatos()))); // muestro la confirmacion de ask
+        llego_trama_conf = true;
+    } else {
+       System.out.println("por aca pasa");// la trama se envio con errores por lo que se vuelve a enviar tipo NAK
+       ca.setTextoRecibir(filtroDatos(String.valueOf(laTrama.getDatos()))); // muestro la confirmacion de que llego con error la trama
+       System.out.println("envio de nuevo");
+       System.out.println(tramaGuardada.getTipo());
        EnviarTrama(tramaGuardada);
-        System.out.println("joya5");
- }
+       System.out.println("joya5");
+    }
 
     System.out.println("joya4");
 }
@@ -142,12 +141,12 @@ public long calcularCRC(String cadena){
     }
 }
 public String filtroDatos(String datos){ // le saco los asteriscos de relleno
-String fin="";
+    String fin="";
     for (int i = 0; i < datos.length(); i++) {
         if(datos.charAt(i)!='*')
         fin=fin+datos.charAt(i);
             }
-return fin;
+    return fin;
 
 }
 public Trama armarTrama(char tipo, String cadena){
@@ -162,8 +161,7 @@ public Trama armarTrama(char tipo, String cadena){
         t.setTipo(tipo);
         t.setDatos(cadenaRellena.toCharArray());
         t.setBandera_fin(banderaFin);
-        System.out.println(t.getTotal());
-
+        System.out.println(t.getTramaArmada());
 
         return t;
 

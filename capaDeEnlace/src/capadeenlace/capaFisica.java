@@ -68,7 +68,7 @@ public class capaFisica extends javax.swing.JFrame implements Runnable,SerialPor
             StringBuilder readBuffer = new StringBuilder();
             int c;
             try {
-                System.out.println("Recibiendo.....houston");
+                System.out.println("Leyendo datos del puerto");
                 //leemos los datos del puerto
                 int i=0;
                 while (i < 40)  { // las tramas son de 40 caracteres
@@ -78,13 +78,11 @@ public class capaFisica extends javax.swing.JFrame implements Runnable,SerialPor
                    
                 }
                 String recibido = readBuffer.toString();
+                
+                setDetalleDeRecepcion("Trama recibida: "+recibido);        
 
-             System.out.println(recibido);
-               
-               // pasamos los datos a la capa de enlace
-            capaenlace.recibir(this,capaenlace.ReconstruirTrama(recibido));
-
-
+                // pasamos los datos a la capa de enlace
+                capaenlace.recibir(this,capaenlace.ReconstruirTrama(recibido));
 
                 //cerramos el flujo de entrada
                 
@@ -106,14 +104,24 @@ public class capaFisica extends javax.swing.JFrame implements Runnable,SerialPor
         this.textoRecibir.setText(textoRecibir);
     }
 
-    public void setDetalleDeComunicacion(String texto) {
+    public void setDetalleDeEnvio(String texto) {
         String textoPreparado;
-        textoPreparado = getDetalleDeComunicacion() + '\n';
-        this.detalleDeComunicacion.setText(textoPreparado + texto);
+        textoPreparado = getDetalleDeEnvio() + '\n';
+        this.detalleDeEnvio.setText(textoPreparado + texto);
     }
     
-    public String getDetalleDeComunicacion() {
-        return detalleDeComunicacion.getText();
+    public String getDetalleDeEnvio() {
+        return detalleDeEnvio.getText();
+    }
+
+    public void setDetalleDeRecepcion(String texto) {
+        String textoPreparado;
+        textoPreparado = getDetalleDeEnvio() + '\n';
+        this.detalleDeRecepcion.setText(textoPreparado + texto);
+    }
+    
+    public String getDetalleDeRecepcion() {
+        return detalleDeRecepcion.getText();
     }
     
     /** This method is called from within the constructor to
@@ -147,7 +155,11 @@ public class capaFisica extends javax.swing.JFrame implements Runnable,SerialPor
         detalle = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         detalleCom = new javax.swing.JScrollPane();
-        detalleDeComunicacion = new javax.swing.JTextArea();
+        detalleDeEnvio = new javax.swing.JTextArea();
+        detalleRecepcion = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
+        detalleCom1 = new javax.swing.JScrollPane();
+        detalleDeRecepcion = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -315,24 +327,26 @@ public class capaFisica extends javax.swing.JFrame implements Runnable,SerialPor
 
         jTabbedPane2.addTab("Mensaje", mensaje);
 
-        jLabel7.setText("Detalle de la comunicación");
+        jLabel7.setText("Detalle del envio");
 
-        detalleDeComunicacion.setColumns(20);
-        detalleDeComunicacion.setRows(5);
-        detalleCom.setViewportView(detalleDeComunicacion);
+        detalleDeEnvio.setEditable(false);
+        detalleDeEnvio.setBackground(new java.awt.Color(204, 255, 204));
+        detalleDeEnvio.setColumns(20);
+        detalleDeEnvio.setRows(5);
+        detalleCom.setViewportView(detalleDeEnvio);
 
         javax.swing.GroupLayout detalleLayout = new javax.swing.GroupLayout(detalle);
         detalle.setLayout(detalleLayout);
         detalleLayout.setHorizontalGroup(
             detalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(detalleLayout.createSequentialGroup()
-                .addGap(179, 179, 179)
-                .addComponent(jLabel7)
-                .addContainerGap(124, Short.MAX_VALUE))
-            .addGroup(detalleLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(detalleCom)
                 .addContainerGap())
+            .addGroup(detalleLayout.createSequentialGroup()
+                .addGap(165, 165, 165)
+                .addComponent(jLabel7)
+                .addContainerGap(198, Short.MAX_VALUE))
         );
         detalleLayout.setVerticalGroup(
             detalleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -344,7 +358,40 @@ public class capaFisica extends javax.swing.JFrame implements Runnable,SerialPor
                 .addContainerGap())
         );
 
-        jTabbedPane2.addTab("Detalle", detalle);
+        jTabbedPane2.addTab("Detalle Envio", detalle);
+
+        jLabel8.setText("Detalle de la recepción");
+
+        detalleDeRecepcion.setEditable(false);
+        detalleDeRecepcion.setBackground(new java.awt.Color(204, 255, 204));
+        detalleDeRecepcion.setColumns(20);
+        detalleDeRecepcion.setRows(5);
+        detalleCom1.setViewportView(detalleDeRecepcion);
+
+        javax.swing.GroupLayout detalleRecepcionLayout = new javax.swing.GroupLayout(detalleRecepcion);
+        detalleRecepcion.setLayout(detalleRecepcionLayout);
+        detalleRecepcionLayout.setHorizontalGroup(
+            detalleRecepcionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(detalleRecepcionLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(detalleCom1, javax.swing.GroupLayout.DEFAULT_SIZE, 443, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(detalleRecepcionLayout.createSequentialGroup()
+                .addGap(155, 155, 155)
+                .addComponent(jLabel8)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        detalleRecepcionLayout.setVerticalGroup(
+            detalleRecepcionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, detalleRecepcionLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel8)
+                .addGap(16, 16, 16)
+                .addComponent(detalleCom1, javax.swing.GroupLayout.DEFAULT_SIZE, 310, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jTabbedPane2.addTab("Detalle Recepcion", detalleRecepcion);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -439,9 +486,24 @@ public class capaFisica extends javax.swing.JFrame implements Runnable,SerialPor
 //                Logger.getLogger(capaFisica.class.getName()).log(Level.SEVERE, null, ex);
 //            }
 
-
-
-capaenlace.EnviarTrama(capaenlace.armarTrama('0', textoEnviar.getText()));
+        Trama tramaArmada = capaenlace.armarTrama('0', textoEnviar.getText());
+        
+        setDetalleDeEnvio("Texto a enviar: "+textoEnviar.getText());
+        setDetalleDeEnvio("---- Armado de trama ---- ");
+        setDetalleDeEnvio("Bandera de inicio: "+tramaArmada.getBandera_inicio());
+        setDetalleDeEnvio("Orden: "+tramaArmada.getOrden());
+        setDetalleDeEnvio("Tipo: "+tramaArmada.getTipo());
+        setDetalleDeEnvio("Datos: "+textoEnviar.getText());
+        setDetalleDeEnvio("CRC: "+tramaArmada.getCrc());
+        setDetalleDeEnvio("Bandera de fin: "+tramaArmada.getBandera_fin());
+        setDetalleDeEnvio("Trama armada: "+tramaArmada.getTramaArmada());
+        setDetalleDeEnvio("---- Fin de trama ---- ");
+        boolean envio = capaenlace.EnviarTrama(tramaArmada);
+        if(envio){
+            setDetalleDeEnvio("---- Trama enviada ---- ");
+        }else{
+            setDetalleDeEnvio("---- Trama no enviada ---- ");
+        }
 
     }//GEN-LAST:event_enviarActionPerformed
 
@@ -472,7 +534,10 @@ capaenlace.EnviarTrama(capaenlace.armarTrama('0', textoEnviar.getText()));
     private javax.swing.JPanel configuracion;
     private javax.swing.JPanel detalle;
     private javax.swing.JScrollPane detalleCom;
-    private javax.swing.JTextArea detalleDeComunicacion;
+    private javax.swing.JScrollPane detalleCom1;
+    private javax.swing.JTextArea detalleDeEnvio;
+    private javax.swing.JTextArea detalleDeRecepcion;
+    private javax.swing.JPanel detalleRecepcion;
     private javax.swing.JButton enviar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -481,6 +546,7 @@ capaenlace.EnviarTrama(capaenlace.armarTrama('0', textoEnviar.getText()));
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JPanel mensaje;
     private javax.swing.JTextField textoEnviar;
