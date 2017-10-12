@@ -9,7 +9,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 
-public class capaFisica extends javax.swing.JFrame implements Runnable,SerialPortEventListener{
+public class Emisor extends javax.swing.JFrame implements Runnable,SerialPortEventListener{
 
     Integer velocidad;
     Integer bitParada;
@@ -28,7 +28,7 @@ public class capaFisica extends javax.swing.JFrame implements Runnable,SerialPor
    
 
 
-    /** Creates new form capaFisica */
+    /** Creates new form Emisor */
      private void iniciarElementos(){
       
         String port;
@@ -44,7 +44,7 @@ public class capaFisica extends javax.swing.JFrame implements Runnable,SerialPor
          }
         
    }
-    public capaFisica() {
+    public Emisor() {
 
         initComponents();
         iniciarElementos();
@@ -80,13 +80,7 @@ public class capaFisica extends javax.swing.JFrame implements Runnable,SerialPor
                 String recibido = readBuffer.toString();
 
              System.out.println(recibido);
-               
-               // pasamos los datos a la capa de enlace
-            capaenlace.recibir(this,capaenlace.ReconstruirTrama(recibido));
-
-
-
-                //cerramos el flujo de entrada
+               //cerramos el flujo de entrada
                 
                 entrada.close();
             } catch (IOException e) {
@@ -140,10 +134,11 @@ public class capaFisica extends javax.swing.JFrame implements Runnable,SerialPor
         jLabel6 = new javax.swing.JLabel();
         comboParada = new javax.swing.JComboBox();
         comboLong = new javax.swing.JComboBox();
-        mensaje = new javax.swing.JPanel();
         textoEnviar = new javax.swing.JTextField();
-        textoRecibir = new javax.swing.JTextField();
         enviar = new javax.swing.JButton();
+        textoRecibir = new javax.swing.JTextField();
+        jButtonCerrarPuerto = new javax.swing.JButton();
+        mensaje = new javax.swing.JPanel();
         detalle = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         detalleCom = new javax.swing.JScrollPane();
@@ -199,72 +194,16 @@ public class capaFisica extends javax.swing.JFrame implements Runnable,SerialPor
         comboLong.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "5", "6", "7", "8" }));
         comboLong.setSelectedIndex(3);
 
-        javax.swing.GroupLayout configuracionLayout = new javax.swing.GroupLayout(configuracion);
-        configuracion.setLayout(configuracionLayout);
-        configuracionLayout.setHorizontalGroup(
-            configuracionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(configuracionLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(configuracionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(configuracionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, configuracionLayout.createSequentialGroup()
-                            .addComponent(jLabel1)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(comboPuerto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(18, 18, 18)
-                            .addComponent(jLabel2)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(comboVelocidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(abrir))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, configuracionLayout.createSequentialGroup()
-                            .addComponent(jLabel3)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(comboParidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(18, 18, 18)
-                            .addComponent(jLabel4)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(comboLong, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jLabel6)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(comboParada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(configuracionLayout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tiempoAcuse, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(51, Short.MAX_VALUE))
-        );
-        configuracionLayout.setVerticalGroup(
-            configuracionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(configuracionLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(configuracionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(comboPuerto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2)
-                    .addComponent(comboVelocidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(abrir))
-                .addGap(18, 18, 18)
-                .addGroup(configuracionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(comboParidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel6)
-                    .addComponent(comboParada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(comboLong, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(26, 26, 26)
-                .addGroup(configuracionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(tiempoAcuse, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
-        );
-
-        jTabbedPane2.addTab("Configuración", configuracion);
-
         textoEnviar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 textoEnviarActionPerformed(evt);
+            }
+        });
+
+        enviar.setText("Enviar");
+        enviar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                enviarActionPerformed(evt);
             }
         });
 
@@ -278,39 +217,104 @@ public class capaFisica extends javax.swing.JFrame implements Runnable,SerialPor
             }
         });
 
-        enviar.setText("Enviar");
-        enviar.addActionListener(new java.awt.event.ActionListener() {
+        jButtonCerrarPuerto.setText("Cerrar Puerto");
+        jButtonCerrarPuerto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                enviarActionPerformed(evt);
+                jButtonCerrarPuertoActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout mensajeLayout = new javax.swing.GroupLayout(mensaje);
-        mensaje.setLayout(mensajeLayout);
-        mensajeLayout.setHorizontalGroup(
-            mensajeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(mensajeLayout.createSequentialGroup()
+        javax.swing.GroupLayout configuracionLayout = new javax.swing.GroupLayout(configuracion);
+        configuracion.setLayout(configuracionLayout);
+        configuracionLayout.setHorizontalGroup(
+            configuracionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(configuracionLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(mensajeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(mensajeLayout.createSequentialGroup()
-                        .addComponent(textoRecibir, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mensajeLayout.createSequentialGroup()
-                        .addComponent(textoEnviar, javax.swing.GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE)
+                .addGroup(configuracionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(textoRecibir)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, configuracionLayout.createSequentialGroup()
+                        .addComponent(textoEnviar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(enviar)
-                        .addGap(12, 12, 12))))
+                        .addGap(2, 2, 2))
+                    .addGroup(configuracionLayout.createSequentialGroup()
+                        .addGroup(configuracionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(configuracionLayout.createSequentialGroup()
+                                .addComponent(jLabel5)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tiempoAcuse, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(configuracionLayout.createSequentialGroup()
+                                .addGroup(configuracionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, configuracionLayout.createSequentialGroup()
+                                        .addComponent(jLabel1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(comboPuerto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jLabel2)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(comboVelocidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(abrir))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, configuracionLayout.createSequentialGroup()
+                                        .addComponent(jLabel3)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(comboParidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jLabel4)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(comboLong, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel6)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(comboParada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jButtonCerrarPuerto)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
-        mensajeLayout.setVerticalGroup(
-            mensajeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(mensajeLayout.createSequentialGroup()
+        configuracionLayout.setVerticalGroup(
+            configuracionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(configuracionLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(mensajeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(configuracionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(comboPuerto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2)
+                    .addComponent(comboVelocidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(abrir)
+                    .addComponent(jButtonCerrarPuerto))
+                .addGap(18, 18, 18)
+                .addGroup(configuracionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(comboParidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel6)
+                    .addComponent(comboParada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(comboLong, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(26, 26, 26)
+                .addGroup(configuracionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(tiempoAcuse, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(configuracionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textoEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(enviar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(textoRecibir, javax.swing.GroupLayout.DEFAULT_SIZE, 303, Short.MAX_VALUE)
                 .addContainerGap())
+        );
+
+        jTabbedPane2.addTab("Configuración", configuracion);
+
+        javax.swing.GroupLayout mensajeLayout = new javax.swing.GroupLayout(mensaje);
+        mensaje.setLayout(mensajeLayout);
+        mensajeLayout.setHorizontalGroup(
+            mensajeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 464, Short.MAX_VALUE)
+        );
+        mensajeLayout.setVerticalGroup(
+            mensajeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 479, Short.MAX_VALUE)
         );
 
         jTabbedPane2.addTab("Mensaje", mensaje);
@@ -328,7 +332,7 @@ public class capaFisica extends javax.swing.JFrame implements Runnable,SerialPor
             .addGroup(detalleLayout.createSequentialGroup()
                 .addGap(179, 179, 179)
                 .addComponent(jLabel7)
-                .addContainerGap(124, Short.MAX_VALUE))
+                .addContainerGap(160, Short.MAX_VALUE))
             .addGroup(detalleLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(detalleCom)
@@ -340,7 +344,7 @@ public class capaFisica extends javax.swing.JFrame implements Runnable,SerialPor
                 .addGap(10, 10, 10)
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(detalleCom, javax.swing.GroupLayout.DEFAULT_SIZE, 310, Short.MAX_VALUE)
+                .addComponent(detalleCom, javax.swing.GroupLayout.DEFAULT_SIZE, 433, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -426,28 +430,25 @@ public class capaFisica extends javax.swing.JFrame implements Runnable,SerialPor
     }//GEN-LAST:event_textoEnviarActionPerformed
 
     private void enviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enviarActionPerformed
-//        Trama t=new Trama();
-//        t=capaenlace.armarTrama((char)48, textoEnviar.getText());
-//
-//     char [] arreglo = t.getTotal().toCharArray();
-//            try {
-//                salida = puerto.getOutputStream();
-//                 for (int i = 0; i < arreglo.length; i++)  {
-//                salida.write((int)arreglo[i]); // se envia la trama
-//                     System.out.println(arreglo[i]);}
-//            } catch (IOException ex) {
-//                Logger.getLogger(capaFisica.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-
-
-
-capaenlace.EnviarTrama(capaenlace.armarTrama('0', textoEnviar.getText()));
-
+        this.setDetalleDeComunicacion("mENSAJE");
+    capaenlace.EnviarTrama(capaenlace.armarTrama('0', textoEnviar.getText()));
+    
     }//GEN-LAST:event_enviarActionPerformed
 
     private void textoRecibirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textoRecibirActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_textoRecibirActionPerformed
+
+    private void jButtonCerrarPuertoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCerrarPuertoActionPerformed
+         try {
+            if (idPuerto.isCurrentlyOwned()){
+                puerto.close();
+                System.out.println("Se cerro el puerto");
+            }
+        } catch (Exception ex) {
+            throw ex;
+        }
+    }//GEN-LAST:event_jButtonCerrarPuertoActionPerformed
   public SerialPort getPuerto(){
     return puerto;
 }
@@ -457,7 +458,7 @@ capaenlace.EnviarTrama(capaenlace.armarTrama('0', textoEnviar.getText()));
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new capaFisica().setVisible(true);
+                new Emisor().setVisible(true);
             }
         });
     }
@@ -474,6 +475,7 @@ capaenlace.EnviarTrama(capaenlace.armarTrama('0', textoEnviar.getText()));
     private javax.swing.JScrollPane detalleCom;
     private javax.swing.JTextArea detalleDeComunicacion;
     private javax.swing.JButton enviar;
+    private javax.swing.JButton jButtonCerrarPuerto;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

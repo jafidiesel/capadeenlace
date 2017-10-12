@@ -21,7 +21,7 @@ public class capaEnlace{
     private final char ack = 49;	//caracter 1
     private final char nak = 50;	//caracter 2
     OutputStream salida;
-    capaFisica capafisica;
+    Emisor capafisica;
     private char ultimoOrden=1;//para no descartar la primer trama que siempre viene con orden 0
     Trama tramaGuardada;
 
@@ -81,7 +81,8 @@ public Trama ReconstruirTrama(String cadenaRecibida){
     return t;
 }
 
-public void recibir(capaFisica ca,Trama laTrama){
+public void recibir(Receptor ca,Trama laTrama){
+    
     if(laTrama.getTipo()=='0'){
         if(laTrama.getOrden() == ultimoOrden){//se perdio el ack descarto la trma reenvio ack
             System.out.println("ultimoorden");
@@ -100,7 +101,7 @@ public void recibir(capaFisica ca,Trama laTrama){
         }else{ // esta todo ok entonces muestro y mando ack
            mandarAck(); // Mando el ask de confirmacion
            ca.setTextoRecibir(filtroDatos(String.valueOf(laTrama.getDatos()))); // mando los datos sin los asteriscos de relleno
-           ca.setDetalleDeComunicacion("mensaje");
+           //ca.setDetalleDeComunicacion("mensaje");
         }
        }
     }
