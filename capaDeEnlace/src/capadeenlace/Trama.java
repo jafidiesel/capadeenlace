@@ -1,14 +1,5 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package capadeenlace;
 
-/**
- *
- * @author Nazrala
- */
 public class Trama {
  private char tipo;
  private char orden=(char)48; // para ver si es una trama reenviada en el caso de perder un ask
@@ -21,8 +12,8 @@ public class Trama {
 
  private char bandera_inicio;
 
-    public String getTotal(){
-    return String.valueOf(bandera_inicio)+String.valueOf(orden)+String.valueOf(tipo)+String.valueOf(datos)+String.valueOf(crc)+String.valueOf(bandera_fin);
+    public String getTramaArmada(){
+        return String.valueOf(bandera_inicio)+String.valueOf(orden)+String.valueOf(tipo)+String.valueOf(datos)+String.valueOf(crc)+String.valueOf(bandera_fin);
     }
 
     public char getAck() {

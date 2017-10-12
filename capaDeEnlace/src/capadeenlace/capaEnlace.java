@@ -1,17 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 
 package capadeenlace;
 import java.io.*;
 import gnu.io.*;
 import java.util.zip.CRC32;
-/**
- *
- * @author Nazrala
- */
+
 public class capaEnlace{
     
     SerialPort elPuerto;
@@ -21,7 +13,7 @@ public class capaEnlace{
     private final char ack = 49;	//caracter 1
     private final char nak = 50;	//caracter 2
     OutputStream salida;
-    capaFisica capafisica;
+    Emisor capafisica;
     private char ultimoOrden=1;//para no descartar la primer trama que siempre viene con orden 0
     Trama tramaGuardada;
 
@@ -84,7 +76,8 @@ public Trama ReconstruirTrama(String cadenaRecibida){
     return t;
 }
 
-public void recibir(capaFisica ca,Trama laTrama){
+public void recibir(Receptor ca,Trama laTrama){
+    
     if(laTrama.getTipo()=='0'){
         if(laTrama.getOrden() == ultimoOrden){//se perdio el ack descarto la trma reenvio ack
             System.out.println("ultimoorden");
@@ -95,28 +88,64 @@ public void recibir(capaFisica ca,Trama laTrama){
             System.out.println(crcRecibido);
             System.out.println(laTrama.getCrc());
         
+
             if(crcRecibido != laTrama.getCrc()){ // en caso de recibir la trama con errores, crc diferentes
                 System.out.println("Error en crc");
                 mandarNak();
             }else{ // esta todo ok entonces muestro y mando ack
                mandarAck(); // Mando el ask de confirmacion
-               ca.setTextoRecibir(filtroDatos(String.valueOf(laTrama.getDatos()))); // mando los datos sin los asteriscos de relleno
-               ca.setDetalleDeEnvio("mensaje");
+               ca.setDetalleDeRecepcion(filtroDatos(String.valueOf(laTrama.getDatos()))); // mando los datos sin los asteriscos de relleno
+               
             }
+
         }
     } else if(laTrama.getTipo()=='1'){ // trama tipo ACK
-        ca.setTextoRecibir(filtroDatos(String.valueOf(laTrama.getDatos()))); // muestro la confirmacion de ask
+        ca.setDetalleDeRecepcion(filtroDatos(String.valueOf(laTrama.getDatos()))); // muestro la confirmacion de ask
         llego_trama_conf = true;
     } else {
        System.out.println("por aca pasa");// la trama se envio con errores por lo que se vuelve a enviar tipo NAK
-       ca.setTextoRecibir(filtroDatos(String.valueOf(laTrama.getDatos()))); // muestro la confirmacion de que llego con error la trama
+       ca.setDetalleDeRecepcion(filtroDatos(String.valueOf(laTrama.getDatos()))); // muestro la confirmacion de que llego con error la trama
        System.out.println("envio de nuevo");
        System.out.println(tramaGuardada.getTipo());
        EnviarTrama(tramaGuardada);
-       System.out.println("joya5");
     }
 
-    System.out.println("joya4");
+}
+
+public void recibir(Emisor ca,Trama laTrama){ 
+    
+    if(laTrama.getTipo()=='0'){
+        if(laTrama.getOrden() == ultimoOrden){//se perdio el ack descarto la trma reenvio ack
+            System.out.println("ultimoorden");
+            mandarAck();
+       
+        }else{    
+            long crcRecibido = calcularCRC(String.valueOf(laTrama.getDatos())); // calculo nuevamente el CRC de los datos recibidos
+            System.out.println(crcRecibido);
+            System.out.println(laTrama.getCrc());
+        
+
+            if(crcRecibido != laTrama.getCrc()){ // en caso de recibir la trama con errores, crc diferentes
+                System.out.println("Error en crc");
+                mandarNak();
+            }else{ // esta todo ok entonces muestro y mando ack
+               mandarAck(); // Mando el ask de confirmacion
+               ca.setDetalleDeEnvio(filtroDatos(String.valueOf(laTrama.getDatos()))); // mando los datos sin los asteriscos de relleno
+               ca.setDetalleDeEnvio("mensaje");
+            }
+
+        }
+    } else if(laTrama.getTipo()=='1'){ // trama tipo ACK
+        ca.setDetalleDeEnvio(filtroDatos(String.valueOf(laTrama.getDatos()))); // muestro la confirmacion de ask
+        llego_trama_conf = true;
+    } else {
+       System.out.println("por aca pasa");// la trama se envio con errores por lo que se vuelve a enviar tipo NAK
+       ca.setDetalleDeEnvio(filtroDatos(String.valueOf(laTrama.getDatos()))); // muestro la confirmacion de que llego con error la trama
+       System.out.println("envio de nuevo");
+       System.out.println(tramaGuardada.getTipo());
+       EnviarTrama(tramaGuardada);
+    }
+
 }
 public void mandarAck(){
       Trama tram = new Trama();
