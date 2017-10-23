@@ -98,26 +98,29 @@ public class Receptor extends javax.swing.JFrame implements Runnable, SerialPort
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(75, 75, 75)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(comboPuerto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(abrir)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(75, 75, 75)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(abrir)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButtonCerrarPuerto))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(comboPuerto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(comboVelocidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(jLabel2)
+                        .addGap(18, 18, 18)
+                        .addComponent(comboVelocidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(35, 35, 35)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(36, Short.MAX_VALUE))
+                        .addGap(93, 93, 93)
+                        .addComponent(jButtonCerrarPuerto)))
+                .addGap(77, 77, 77))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(35, 35, 35)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 536, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -134,7 +137,7 @@ public class Receptor extends javax.swing.JFrame implements Runnable, SerialPort
                     .addComponent(jButtonCerrarPuerto))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(105, Short.MAX_VALUE))
         );
 
         pack();
@@ -164,6 +167,7 @@ public class Receptor extends javax.swing.JFrame implements Runnable, SerialPort
                 puerto = (SerialPort) idPuerto.open("Capa de Enlace", 2000);
                 entrada = puerto.getInputStream();
                 puerto.addEventListener(this);
+                puerto.enableReceiveTimeout(2000);
                 puerto.notifyOnDataAvailable(true);// para que nos notifique sobre eventos
 
                 hilo = new Thread(this); //corro un hilo para recibir datos
@@ -184,7 +188,7 @@ public class Receptor extends javax.swing.JFrame implements Runnable, SerialPort
     }//GEN-LAST:event_abrirActionPerformed
 
     public void serialEvent(SerialPortEvent event){
-       
+        boolean CRCStatus = true;
         switch (event.getEventType()) {
         case SerialPortEvent.BI:
         case SerialPortEvent.OE:
@@ -197,13 +201,16 @@ public class Receptor extends javax.swing.JFrame implements Runnable, SerialPort
         case SerialPortEvent.OUTPUT_BUFFER_EMPTY:
             break;
         case SerialPortEvent.DATA_AVAILABLE:    //analizamos la entrada de datos
-
+       
             StringBuilder readBuffer = new StringBuilder();
+            
             int c;
+            
             try {
                 System.out.println("Leemos los datos del puerto");
                 //leemos los datos del puerto
                 int i=0;
+              
                 while (i < 40)  { // las tramas son de 40 caracteres
                     i++;
                     c=entrada.read();
@@ -213,15 +220,17 @@ public class Receptor extends javax.swing.JFrame implements Runnable, SerialPort
                 
                 String recibido = readBuffer.toString();
                 System.out.println(recibido);
+              
                 setDetalleDeRecepcion("Trama recibida: "+recibido);
                 
                // pasamos los datos a la capa de enlace
                 capaenlace.recibir(this,capaenlace.ReconstruirTrama(recibido));
-
-
+                if(CRCStatus){
+                    setDetalleDeRecepcion("CRC comprobado correctamente");
+                }
+                
 
                 //cerramos el flujo de entrada
-                
                 entrada.close();
             } catch (IOException e) {
                 System.out.println("Error al recibir: "+e.getMessage());

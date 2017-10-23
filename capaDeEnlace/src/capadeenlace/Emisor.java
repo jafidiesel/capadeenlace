@@ -30,6 +30,14 @@ public class Emisor extends javax.swing.JFrame implements Runnable,SerialPortEve
 
     /** Creates new form Emisor */
      private void iniciarElementos(){
+      jLabel4.setVisible(false);
+      comboLong.setVisible(false);
+      jLabel6.setVisible(false);
+      comboParada.setVisible(false);
+      jLabel3.setVisible(false);
+      comboParidad.setVisible(false);
+      
+      
       
         String port;
         System.out.println(CommPortIdentifier.PORT_SERIAL);
@@ -51,7 +59,6 @@ public class Emisor extends javax.swing.JFrame implements Runnable,SerialPortEve
 
     }
     public void serialEvent(SerialPortEvent event){
-       
         switch (event.getEventType()) {
         case SerialPortEvent.BI:
         case SerialPortEvent.OE:
@@ -64,26 +71,33 @@ public class Emisor extends javax.swing.JFrame implements Runnable,SerialPortEve
         case SerialPortEvent.OUTPUT_BUFFER_EMPTY:
             break;
         case SerialPortEvent.DATA_AVAILABLE:    //analizamos la entrada de datos
-
+       
             StringBuilder readBuffer = new StringBuilder();
+            
             int c;
+            
             try {
-                System.out.println("Leyendo datos del puerto");
+                System.out.println("Leemos los datos del puerto");
                 //leemos los datos del puerto
                 int i=0;
+              
                 while (i < 40)  { // las tramas son de 40 caracteres
                     i++;
                     c=entrada.read();
                     readBuffer.append((char)c);
                    
                 }
+                
                 String recibido = readBuffer.toString();
+                System.out.println(recibido);
+              
+                //setDetalleDeRecepcion("Trama recibida: "+recibido);
                 
-
-                
-                // pasamos los datos a la capa de enlace
+               // pasamos los datos a la capa de enlace
                 capaenlace.recibir(this,capaenlace.ReconstruirTrama(recibido));
-                
+
+
+                //cerramos el flujo de entrada
                 entrada.close();
             } catch (IOException e) {
                 System.out.println("Error al recibir: "+e.getMessage());
@@ -135,10 +149,6 @@ public class Emisor extends javax.swing.JFrame implements Runnable,SerialPortEve
         jButtonCerrarPuerto = new javax.swing.JButton();
         detalleCom2 = new javax.swing.JScrollPane();
         detalleDeEnvio = new javax.swing.JTextArea();
-        detalleRecepcion = new javax.swing.JPanel();
-        jLabel8 = new javax.swing.JLabel();
-        detalleCom1 = new javax.swing.JScrollPane();
-        detalleDeRecepcion = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -177,6 +187,11 @@ public class Emisor extends javax.swing.JFrame implements Runnable,SerialPortEve
 
         tiempoAcuse.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         tiempoAcuse.setText("800");
+        tiempoAcuse.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tiempoAcuseActionPerformed(evt);
+            }
+        });
 
         jLabel6.setText("Bits de parada:");
 
@@ -260,10 +275,10 @@ public class Emisor extends javax.swing.JFrame implements Runnable,SerialPortEve
                                         .addComponent(comboParada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jButtonCerrarPuerto)))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, configuracionLayout.createSequentialGroup()
-                        .addComponent(detalleCom2)
-                        .addContainerGap())))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+            .addGroup(configuracionLayout.createSequentialGroup()
+                .addGap(42, 42, 42)
+                .addComponent(detalleCom2))
         );
         configuracionLayout.setVerticalGroup(
             configuracionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -280,10 +295,10 @@ public class Emisor extends javax.swing.JFrame implements Runnable,SerialPortEve
                 .addGroup(configuracionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(comboParidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4)
                     .addComponent(jLabel6)
                     .addComponent(comboParada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(comboLong, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(comboLong, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
                 .addGap(26, 26, 26)
                 .addGroup(configuracionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
@@ -292,45 +307,12 @@ public class Emisor extends javax.swing.JFrame implements Runnable,SerialPortEve
                 .addGroup(configuracionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textoEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(enviar))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(detalleCom2, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(10, Short.MAX_VALUE))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         jTabbedPane2.addTab("Configuración", configuracion);
-
-        jLabel8.setText("Detalle de la recepción");
-
-        detalleDeRecepcion.setEditable(false);
-        detalleDeRecepcion.setBackground(new java.awt.Color(204, 255, 204));
-        detalleDeRecepcion.setColumns(20);
-        detalleDeRecepcion.setRows(5);
-        detalleCom1.setViewportView(detalleDeRecepcion);
-
-        javax.swing.GroupLayout detalleRecepcionLayout = new javax.swing.GroupLayout(detalleRecepcion);
-        detalleRecepcion.setLayout(detalleRecepcionLayout);
-        detalleRecepcionLayout.setHorizontalGroup(
-            detalleRecepcionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(detalleRecepcionLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(detalleCom1, javax.swing.GroupLayout.DEFAULT_SIZE, 443, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(detalleRecepcionLayout.createSequentialGroup()
-                .addGap(155, 155, 155)
-                .addComponent(jLabel8)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        detalleRecepcionLayout.setVerticalGroup(
-            detalleRecepcionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, detalleRecepcionLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel8)
-                .addGap(16, 16, 16)
-                .addComponent(detalleCom1, javax.swing.GroupLayout.DEFAULT_SIZE, 310, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
-        jTabbedPane2.addTab("Detalle Recepcion", detalleRecepcion);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -355,6 +337,7 @@ public class Emisor extends javax.swing.JFrame implements Runnable,SerialPortEve
             if (idPuerto.isCurrentlyOwned()){
                 puerto.close();
                 System.out.println("Se cerro el puerto");
+                textoEnviar.setText("");
             }
         } catch (Exception ex) {
             throw ex;
@@ -362,22 +345,11 @@ public class Emisor extends javax.swing.JFrame implements Runnable,SerialPortEve
     }//GEN-LAST:event_jButtonCerrarPuertoActionPerformed
 
     private void enviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enviarActionPerformed
-
-        //        Trama t=new Trama();
-        //        t=capaenlace.armarTrama((char)48, textoEnviar.getText());
-        //
-        //     char [] arreglo = t.getTotal().toCharArray();
-        //            try {
-            //                salida = puerto.getOutputStream();
-            //                 for (int i = 0; i < arreglo.length; i++)  {
-                //                salida.write((int)arreglo[i]); // se envia la trama
-                //                     System.out.println(arreglo[i]);}
-            //            } catch (IOException ex) {
-            //                Logger.getLogger(capaFisica.class.getName()).log(Level.SEVERE, null, ex);
-            //            }
-
+        long tiempoDeInicio, tiempoFinal;
+        
         Trama tramaArmada = capaenlace.armarTrama('0', textoEnviar.getText());
-         this.detalleDeEnvio.setText("");
+        
+        this.detalleDeEnvio.setText("");
         setDetalleDeEnvio("Texto a enviar: "+textoEnviar.getText());
         setDetalleDeEnvio("---- Armado de trama ---- ");
         setDetalleDeEnvio("Bandera de inicio: "+tramaArmada.getBandera_inicio());
@@ -386,11 +358,20 @@ public class Emisor extends javax.swing.JFrame implements Runnable,SerialPortEve
         setDetalleDeEnvio("Datos: "+textoEnviar.getText());
         setDetalleDeEnvio("CRC: "+tramaArmada.getCrc());
         setDetalleDeEnvio("Bandera de fin: "+tramaArmada.getBandera_fin());
-        setDetalleDeEnvio("Trama armada: "+tramaArmada.getTramaArmada());
+        setDetalleDeEnvio("Trama armada: "+ tramaArmada.getTramaArmada());
         setDetalleDeEnvio("---- Fin de trama ---- ");
+        tiempoDeInicio = System.currentTimeMillis();
+        System.out.println("Inicio"+ tiempoDeInicio);
         boolean envio = capaenlace.EnviarTrama(tramaArmada);
+        tiempoFinal = System.currentTimeMillis();
+        System.out.println("Final"+tiempoFinal);
+        long tiempoTotal = tiempoFinal-tiempoDeInicio;
+        System.out.println("TT"+ tiempoTotal);
+        long tiempo = tiempoTotal*1000;
+        
         if(envio){
             setDetalleDeEnvio("---- Trama enviada ---- ");
+            
         }else{
             setDetalleDeEnvio("---- Trama no enviada ---- ");
         }
@@ -416,6 +397,7 @@ public class Emisor extends javax.swing.JFrame implements Runnable,SerialPortEve
             if(!idPuerto.isCurrentlyOwned()){
 
                 velocidad=Integer.parseInt(comboVelocidad.getSelectedItem().toString());
+                
                 bitParada=Integer.parseInt(comboParada.getSelectedItem().toString());
 
                 if(comboParidad.getSelectedItem().toString().equals("Par"))
@@ -431,15 +413,12 @@ public class Emisor extends javax.swing.JFrame implements Runnable,SerialPortEve
                 puerto.addEventListener(this);
                 puerto.notifyOnDataAvailable(true);// para que nos notifique sobre eventos
 
-                hilo = new Thread(this); //corro un hilo para recibir datos
-                hilo.start();
-
-                System.out.println("Abri el puerto: "+puerto.getName());
+                System.out.println("Se abrio el puerto: "+puerto.getName());
 
             }
             else{
                 puerto.close();
-                System.out.println("Cerre el puerto: "+puerto.getName());
+                System.out.println("Se cerro el puerto: "+puerto.getName());
             }
         }
         catch (Exception ex) {
@@ -452,6 +431,10 @@ public class Emisor extends javax.swing.JFrame implements Runnable,SerialPortEve
     private void comboPuertoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboPuertoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_comboPuertoActionPerformed
+
+    private void tiempoAcuseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tiempoAcuseActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tiempoAcuseActionPerformed
   public SerialPort getPuerto(){
     return puerto;
 }
@@ -474,11 +457,8 @@ public class Emisor extends javax.swing.JFrame implements Runnable,SerialPortEve
     private javax.swing.JComboBox comboPuerto;
     private javax.swing.JComboBox comboVelocidad;
     private javax.swing.JPanel configuracion;
-    private javax.swing.JScrollPane detalleCom1;
     private javax.swing.JScrollPane detalleCom2;
     private javax.swing.JTextArea detalleDeEnvio;
-    private javax.swing.JTextArea detalleDeRecepcion;
-    private javax.swing.JPanel detalleRecepcion;
     private javax.swing.JButton enviar;
     private javax.swing.JButton jButtonCerrarPuerto;
     private javax.swing.JLabel jLabel1;
@@ -487,7 +467,6 @@ public class Emisor extends javax.swing.JFrame implements Runnable,SerialPortEve
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JTextField textoEnviar;
     private javax.swing.JTextField tiempoAcuse;

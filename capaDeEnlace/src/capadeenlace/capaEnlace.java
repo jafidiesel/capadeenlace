@@ -7,6 +7,7 @@ import java.util.zip.CRC32;
 public class capaEnlace{
     
     SerialPort elPuerto;
+    long tiempo;
     private char banderaInicio ='$';
     private char banderaFin= '$';
     private final char datos = 48;	//caracter 0
@@ -28,7 +29,6 @@ elPuerto = puerto;
 public boolean EnviarTrama(Trama trama){
     
     if(llego_trama_conf == true){
-        
         if(trama.getTipo()=='0'){ // ya que es la unica trama que necesita de ack para volver a mandar es la de datos
             llego_trama_conf = false;
         }
@@ -46,8 +46,10 @@ public boolean EnviarTrama(Trama trama){
             return false;
         }
         return true;
-    }
+           }
     return false;
+    
+    
 }
 
 public Trama ReconstruirTrama(String cadenaRecibida){
@@ -85,6 +87,7 @@ public void recibir(Receptor ca,Trama laTrama){
        
         }else{    
             long crcRecibido = calcularCRC(String.valueOf(laTrama.getDatos())); // calculo nuevamente el CRC de los datos recibidos
+            
             System.out.println(crcRecibido);
             System.out.println(laTrama.getCrc());
         
@@ -94,18 +97,17 @@ public void recibir(Receptor ca,Trama laTrama){
                 mandarNak();
             }else{ // esta todo ok entonces muestro y mando ack
                mandarAck(); // Mando el ask de confirmacion
-               ca.setDetalleDeRecepcion(filtroDatos(String.valueOf(laTrama.getDatos()))); // mando los datos sin los asteriscos de relleno
+               ca.setDetalleDeRecepcion("Mensaje recibido: "+filtroDatos(String.valueOf(laTrama.getDatos()))); // mando los datos sin los asteriscos de relleno
                
             }
 
         }
     } else if(laTrama.getTipo()=='1'){ // trama tipo ACK
-        ca.setDetalleDeRecepcion(filtroDatos(String.valueOf(laTrama.getDatos()))); // muestro la confirmacion de ask
+        ca.setDetalleDeRecepcion("Mensaje recibido: "+filtroDatos(String.valueOf(laTrama.getDatos()))); // muestro la confirmacion de ask
         llego_trama_conf = true;
     } else {
-       System.out.println("por aca pasa");// la trama se envio con errores por lo que se vuelve a enviar tipo NAK
-       ca.setDetalleDeRecepcion(filtroDatos(String.valueOf(laTrama.getDatos()))); // muestro la confirmacion de que llego con error la trama
-       System.out.println("envio de nuevo");
+       // la trama se envio con errores por lo que se vuelve a enviar tipo NAK
+       ca.setDetalleDeRecepcion("Mensaje recibido: "+filtroDatos(String.valueOf(laTrama.getDatos()))); // muestro la confirmacion de que llego con error la trama
        System.out.println(tramaGuardada.getTipo());
        EnviarTrama(tramaGuardada);
     }
@@ -131,7 +133,7 @@ public void recibir(Emisor ca,Trama laTrama){
             }else{ // esta todo ok entonces muestro y mando ack
                mandarAck(); // Mando el ask de confirmacion
                ca.setDetalleDeEnvio(filtroDatos(String.valueOf(laTrama.getDatos()))); // mando los datos sin los asteriscos de relleno
-               ca.setDetalleDeEnvio("mensaje");
+               
             }
 
         }
@@ -139,9 +141,9 @@ public void recibir(Emisor ca,Trama laTrama){
         ca.setDetalleDeEnvio(filtroDatos(String.valueOf(laTrama.getDatos()))); // muestro la confirmacion de ask
         llego_trama_conf = true;
     } else {
-       System.out.println("por aca pasa");// la trama se envio con errores por lo que se vuelve a enviar tipo NAK
+       // la trama se envio con errores por lo que se vuelve a enviar tipo NAK
        ca.setDetalleDeEnvio(filtroDatos(String.valueOf(laTrama.getDatos()))); // muestro la confirmacion de que llego con error la trama
-       System.out.println("envio de nuevo");
+       
        System.out.println(tramaGuardada.getTipo());
        EnviarTrama(tramaGuardada);
     }
@@ -182,9 +184,7 @@ public Trama armarTrama(char tipo, String cadena){
         
         String cadenaRellena = RellenarDatos(cadena);
         Trama t = new Trama();
-        System.out.println("PASA");
         long crc=calcularCRC(cadenaRellena);
-        System.out.println("PASO");
         t.setCrc(crc);
         t.setBandera_inicio(banderaInicio);
         t.setTipo(tipo);
@@ -207,4 +207,12 @@ public Trama armarTrama(char tipo, String cadena){
        }
        return cad;
    }
+
+    void setTiempo(long tiempo) {
+        this.tiempo= tiempo;
+    }
+    long getTiempo() {
+        return tiempo;
+    }
+   
 }
